@@ -1,0 +1,6 @@
+.nodeBox {
+    width:25px;
+    height:25px;
+    display:inline-block;
+    outline: 1px solid black
+}
