@@ -11,32 +11,40 @@ export const dijkstra = (grid, startNode, finishNode) => {
         unvisitedNodes.sort((a,b) => a.distance - b.distance);
         //get current node
         let currentNode = unvisitedNodes.shift();
-        console.log(currentNode);
         currentNode.isVisited = true;
 
         // update distance of neighbors node
         let neighborsNode = getNeighborNode(grid, currentNode);
         for(const neighbor of neighborsNode) {
-            neighbor.distance = currentNode.distance + 1;
-            neighbor.previousNode = currentNode;
+            //only evaluate unvisited neighbor
+            if (neighbor.isVisited === false) {
+                neighbor.distance = currentNode.distance + 1;
+                neighbor.previousNode = currentNode;
+            }
         }
     
-
         // mark current node as visited
         currentNode.isVisited = true;
 
         //save visited node to array
         visitedNodes.push(currentNode);
 
-        console.log(currentNode);
-
         if (currentNode === finishNode) {
             return visitedNodes;
         }
-        
     }
+}
 
-
+export const getShortestRoute = (finishNode) => {
+    const routes = [];
+    let currentNode = finishNode;
+    
+    while(currentNode !== null) {
+        currentNode.isRoute = true;
+        routes.unshift(currentNode);
+        currentNode = currentNode.previousNode;
+    }
+    return routes;
 }
 
 const getNeighborNode = (grid, currentNode) => {
@@ -62,7 +70,7 @@ const getNeighborNode = (grid, currentNode) => {
     if (col < grid[0].length - 1) {
         neighborsNode.push(grid[row][col + 1]);
     }
-    neighborsNode.filter(x => !x.isVisited);
+    // neighborsNode.filter(x => !x.isVisited);
     return neighborsNode;
 }
 
