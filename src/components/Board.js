@@ -39,6 +39,8 @@ const createNodes = () => {
 const Board = () => {
     const [nodes, setNodes] = useState(createNodes());
     const [mousePressed, setMousePressed] = useState(false);
+    const [drawSelection, setDrawSelection] = useState('WALL');
+    const [message, setMessage] = useState('Click and drag on nodes to create a wall');
 
     const visualizeAlgoritm = () => {
         const cloneNode = [...nodes];
@@ -79,9 +81,28 @@ const Board = () => {
         setNodes(cloneNode);
     }
 
+    const updateStart = (node) => {
+        const cloneNode = [...nodes];
+        const previousStart = cloneNode.filter(node => {
+            return node.isStart === true;
+        });
+        console.log(previousStart)
+    }
+
     const mouseDownHandler = (node) => {
         setMousePressed(true);
-        UpdateWall(node);
+        switch(drawSelection) {
+            case 'WALL':
+                UpdateWall(node);
+                break;
+            case 'START':
+                updateStart(node);
+                break;
+            case 'FINISH':
+                break;
+            default:
+                break;
+        }
     }
 
     const mouseUpHandler = () => {
@@ -94,10 +115,33 @@ const Board = () => {
         UpdateWall(node);
     }
 
+    const startChangeHandler = () => {
+        setDrawSelection('START');
+        setMessage('Click on node to define START point');
+    }
+
+    const finishtChangeHandler = () => {
+        setDrawSelection('FINISH');
+        setMessage('Click on node to define FINISH point');
+    }
+
+    const wallChangeHandler = () => {
+        setDrawSelection('WALL');
+        setMessage('Click and drag on nodes to create a wall');
+    }
+
     return(
         <React.Fragment>
             <button onClick={visualizeAlgoritm}>Find Sortest Route</button>
-            <p>Click and drag on nodes to create a wall</p>
+            <p>
+                <input type="radio" name="draw_selection" value="START" onChange={() => startChangeHandler()} 
+                    checked={drawSelection === 'START'}></input>START node
+                <input type="radio" name="draw_selection" value="FINISH" onChange={() => finishtChangeHandler()} 
+                    checked={drawSelection === 'FINISH'}></input>FINISH node
+                <input type="radio" name="draw_selection" value="WALL" onChange={() =>wallChangeHandler()} 
+                    checked={drawSelection === 'WALL'}></input>WALL node
+            </p>
+            <p>{message}</p>
             <div className='grid'>
                 {
                     nodes.map((rows, rowIdx) => {
