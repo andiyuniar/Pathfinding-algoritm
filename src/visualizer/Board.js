@@ -27,6 +27,7 @@ const createNodes = () => {
                 previousNode: null,
                 isVisited: false,
                 isShortRoute: false,
+                isWall: false,
             }
             currentRow.push(currentNode);
         }
@@ -37,6 +38,7 @@ const createNodes = () => {
 
 const Board = () => {
     const [nodes, setNodes] = useState(createNodes());
+    const [mousePressed, setMousePressed] = useState(false);
 
     const visualizeAlgoritm = () => {
         const cloneNode = [...nodes];
@@ -54,29 +56,62 @@ const Board = () => {
         }
         //visualize short route
         for(let node of routes) {
-            cloneNode[node.row][node.col].isRoute = node.isRoute;
+            cloneNode[node.row][node.col].isShortRoute = node.isShortRoute;
             setTimeout(() => {
-                document.getElementById(node.id).style['background-color'] = 'blue';
+                document.getElementById(node.id).style['background-color'] = '#05f5a5';
             }, 3000)
         }
         setNodes(cloneNode);
 
         //console.table(visitedNodes);
         console.log('Visualize end');
-}
+    }
+
+    /// update node into wall
+    const UpdateWall = (node) => {
+        const cloneNode = [...nodes];
+        const selectedNode = cloneNode[node.row][node.col];
+        const newNode = {
+            ...selectedNode,
+            isWall: !selectedNode.isWall
+        }
+        cloneNode[node.row][node.col] = newNode;
+        setNodes(cloneNode);
+    }
+
+    const mouseDownHandler = (node) => {
+        setMousePressed(true);
+        UpdateWall(node);
+    }
+
+    const mouseUpHandler = () => {
+        setMousePressed(false);
+    }
+
+    const mouseEnterHandler = (node) => {
+        if (!mousePressed) return;
+
+        UpdateWall(node);
+    }
 
     return(
         <React.Fragment>
             <button onClick={visualizeAlgoritm}>Find Sortest Route</button>
+            <p>Click and drag on nodes to create a wall</p>
             <div className='grid'>
                 {
                     nodes.map((rows, rowIdx) => {
                         return(
-                            <div key={rowIdx}>
+                            <div key={rowIdx} >
                                 {
                                     rows.map((col, colIdx) => {
                                         return (
-                                            <Node id={col.id} key={colIdx} isStart={col.isStart} isFinish={col.isFinish} isVisited={col.isVisited} isRoute={col.isRoute}></Node>
+                                            <Node id={col.id} key={colIdx} isStart={col.isStart} 
+                                                isFinish={col.isFinish} isVisited={col.isVisited} 
+                                                onMouseDown={() => mouseDownHandler(col)}
+                                                onMouseUp={mouseUpHandler} isWall={col.isWall}
+                                                onMouseEnter={() => mouseEnterHandler(col)}
+                                            ></Node>
                                         )
                                     })
                                 }

@@ -20,9 +20,11 @@ export const dijkstra = (grid, startNode, finishNode) => {
         let neighborsNode = getNeighborNode(grid, currentNode);
         for(const neighbor of neighborsNode) {
             //only evaluate unvisited neighbor
-            if (neighbor.isVisited === false) {
-                neighbor.distance = currentNode.distance + 1;
-                neighbor.previousNode = currentNode;
+            if (neighbor.isWall === false) {
+                if (neighbor.isVisited === false) {
+                    neighbor.distance = currentNode.distance + 1;
+                    neighbor.previousNode = currentNode;
+                }
             }
         }
     
@@ -43,7 +45,7 @@ export const getShortestRoute = (finishNode) => {
     let currentNode = finishNode;
     
     while(currentNode !== null) {
-        currentNode.isRoute = true;
+        currentNode.isShortRoute = true;
         routes.unshift(currentNode);
         currentNode = currentNode.previousNode;
     }
