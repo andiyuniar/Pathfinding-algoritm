@@ -3,12 +3,12 @@ import './node.css';
 
 
 const Node = (props) => {
-    const { isStart, isFinish, isVisited, isRoute } = props;
-    const otherClass = isStart ? 'startNode' : isFinish ? 'finishNode': isVisited ? 'visitedNode': '';
-    const routeClass = isRoute ? 'routeNode' : ''
+    const { isStart, isFinish, id } = props;
+    const otherClass = isStart ? 'startNode' : isFinish ? 'finishNode': '';
+    //const routeClass = isRoute ? 'routeNode' : ''
 
     return (
-        <div className={`nodeBox ${otherClass} ${routeClass}`}>
+        <div id={id} className={`nodeBox ${otherClass}` }>
 
         </div>)
 }

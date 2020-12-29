@@ -1,13 +1,16 @@
 
 export const dijkstra = (grid, startNode, finishNode) => {
+    console.log('Alogirtm called');
     if(!startNode || !finishNode || startNode === finishNode) {
         return false;
     }
     const visitedNodes = [];
     const unvisitedNodes = getUnvisitedNodes(grid);
 
+    // loop for each unvisited nodes
     while(!!unvisitedNodes.length) {
 
+        // start from node that has a distance (already visited)
         unvisitedNodes.sort((a,b) => a.distance - b.distance);
         //get current node
         let currentNode = unvisitedNodes.shift();
@@ -70,7 +73,6 @@ const getNeighborNode = (grid, currentNode) => {
     if (col < grid[0].length - 1) {
         neighborsNode.push(grid[row][col + 1]);
     }
-    // neighborsNode.filter(x => !x.isVisited);
     return neighborsNode;
 }
 
