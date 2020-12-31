@@ -11,5 +11,5 @@ In the project directory, you can run:
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-Or you can view in [heroku](https://pathfinder-algo.herokuapp.com/)
+Or you can try in [https://pathfinder-algo.herokuapp.com/](https://pathfinder-algo.herokuapp.com/)
 
