@@ -10,13 +10,14 @@ const START_COL = 3;
 const FINISH_ROW = 23;
 const FINISH_COL = 34;
 
-const createNodes = () => {
+const createBoard = () => {
     const nodes = [];
     let num = 0;
     for (let row = 0; row < BOARD_HEIGHT; row++){
         const currentRow = [];
         for(let col = 0; col < BOARD_LENGTH; col++){
             num += 1;
+            // create node data
             const currentNode = {
                 id: `div-${num}`,
                 row,
@@ -37,15 +38,38 @@ const createNodes = () => {
 }
 
 const Board = () => {
-    const [nodes, setNodes] = useState(createNodes());
+    const [nodes, setNodes] = useState(createBoard());
     const [mousePressed, setMousePressed] = useState(false);
     const [drawSelection, setDrawSelection] = useState('WALL');
     const [message, setMessage] = useState('Click and drag on nodes to create a wall');
 
+    const getNodeData = () => {
+        let data = [];
+
+        for(const row of nodes){
+            for(const node of row){
+                data.push(node);
+            }
+        }
+        return data;
+    }
+
+    const getStartNode = () => {
+        const nodeData = getNodeData();
+        const startNode = nodeData.filter(x => x.isStart);
+        return startNode[0];
+    }
+
+    const getFinishNode = () => {
+        const nodeData = getNodeData();
+        const finishNode = nodeData.filter(x => x.isFinish);
+        return finishNode[0];
+    }
+
     const visualizeAlgoritm = () => {
         const cloneNode = [...nodes];
-        const startNode = cloneNode[START_ROW][START_COL];
-        const finishNode = cloneNode[FINISH_ROW][FINISH_COL];
+        const startNode = getStartNode();
+        const finishNode = getFinishNode();
 
         const visitedNodes = dijkstra(cloneNode, startNode, finishNode);
         const routes = getShortestRoute(finishNode);
@@ -53,7 +77,7 @@ const Board = () => {
         for(let node of visitedNodes) {
             cloneNode[node.row][node.col].isVisited = node.isVisited;
             setTimeout(() => {
-                document.getElementById(node.id).style['background-color'] = 'yellow';
+                document.getElementById(node.id).style['background-color'] = '#dadce0';
             }, 3000);
         }
         //visualize short route
@@ -73,6 +97,8 @@ const Board = () => {
     const UpdateWall = (node) => {
         const cloneNode = [...nodes];
         const selectedNode = cloneNode[node.row][node.col];
+        if (selectedNode.isStart || selectedNode.isFinish) return;
+
         const newNode = {
             ...selectedNode,
             isWall: !selectedNode.isWall
@@ -81,12 +107,26 @@ const Board = () => {
         setNodes(cloneNode);
     }
 
-    const updateStart = (node) => {
-        const cloneNode = [...nodes];
-        const previousStart = cloneNode.filter(node => {
-            return node.isStart === true;
-        });
-        console.log(previousStart)
+    const updateStartPoint = (node) => {
+        const nodesClone = [...nodes]
+        const previousStart = getStartNode();
+        //update start position
+        nodesClone[previousStart.row][previousStart.col].isStart = false;
+        nodesClone[previousStart.row][previousStart.col].distance = Infinity;
+        nodesClone[node.row][node.col].isStart = true;
+        nodesClone[node.row][node.col].distance = 0;
+        
+        setNodes(nodesClone);
+    }
+
+    const updateFinishPoint = (node) => {
+        const nodesClone = [...nodes];
+        const previousFinish = getFinishNode();
+        //update finish position
+        nodesClone[previousFinish.row][previousFinish.col].isFinish = false;
+        nodesClone[node.row][node.col].isFinish = true;
+        
+        setNodes(nodesClone);
     }
 
     const mouseDownHandler = (node) => {
@@ -96,9 +136,10 @@ const Board = () => {
                 UpdateWall(node);
                 break;
             case 'START':
-                updateStart(node);
+                updateStartPoint(node);
                 break;
             case 'FINISH':
+                updateFinishPoint(node);
                 break;
             default:
                 break;
@@ -112,7 +153,9 @@ const Board = () => {
     const mouseEnterHandler = (node) => {
         if (!mousePressed) return;
 
-        UpdateWall(node);
+        if (drawSelection === 'WALL') {
+            UpdateWall(node);
+        }
     }
 
     const startChangeHandler = () => {

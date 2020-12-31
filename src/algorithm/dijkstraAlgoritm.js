@@ -1,6 +1,5 @@
 
 export const dijkstra = (grid, startNode, finishNode) => {
-    console.log('Alogirtm called');
     if(!startNode || !finishNode || startNode === finishNode) {
         return false;
     }
@@ -14,6 +13,12 @@ export const dijkstra = (grid, startNode, finishNode) => {
         unvisitedNodes.sort((a,b) => a.distance - b.distance);
         //get current node
         let currentNode = unvisitedNodes.shift();
+
+        //skip wall node
+        if (currentNode.isWall) continue; 
+        //stop the loop if the node is unreachable
+        if (currentNode.distance === Infinity) break;
+
         currentNode.isVisited = true;
 
         // update distance of neighbors node
@@ -35,14 +40,16 @@ export const dijkstra = (grid, startNode, finishNode) => {
         visitedNodes.push(currentNode);
 
         if (currentNode === finishNode) {
-            return visitedNodes;
+            break;
         }
     }
+    return visitedNodes;
 }
 
 export const getShortestRoute = (finishNode) => {
     const routes = [];
     let currentNode = finishNode;
+    if (currentNode.previousNode === null) return routes;
     
     while(currentNode !== null) {
         currentNode.isShortRoute = true;
