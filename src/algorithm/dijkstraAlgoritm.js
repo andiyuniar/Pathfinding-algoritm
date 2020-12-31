@@ -19,6 +19,7 @@ export const dijkstra = (grid, startNode, finishNode) => {
         //stop the loop if the node is unreachable
         if (currentNode.distance === Infinity) break;
 
+        // mark current node as visited
         currentNode.isVisited = true;
 
         // update distance of neighbors node
@@ -33,9 +34,6 @@ export const dijkstra = (grid, startNode, finishNode) => {
             }
         }
     
-        // mark current node as visited
-        currentNode.isVisited = true;
-
         //save visited node to array
         visitedNodes.push(currentNode);
 
