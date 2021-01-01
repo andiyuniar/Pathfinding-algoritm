@@ -2,8 +2,9 @@
     width:15px;
     height:15px;
     display:inline-block;
-    border: 1px solid black;
-    margin-right: 3px;
+    border: 1px solid rgb(196, 193, 193);
+    padding: 0px;
+    margin: -3 0 0 0;
 }
 
 .startNode {
@@ -18,4 +19,7 @@
 }
 .routeNode {
     background-color: blue;
+}
+.wallNode {
+    background-color: black;
 }
