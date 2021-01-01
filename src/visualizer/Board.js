@@ -7,7 +7,7 @@ const START_ROW = 10;
 const START_COL = 3;
 const FINISH_ROW = 23;
 const FINISH_COL = 34;
-const BOARD_LENGTH = 60;
+const BOARD_LENGTH = 40;
 const BOARD_HEIGHT = 25;
 
 export default class Board extends Component {
@@ -26,6 +26,7 @@ export default class Board extends Component {
                 let currentNode = {
                     col,
                     row,
+                    id: `${row}`+`${col}`,
                     isStart: row === START_ROW && col === START_COL,
                     isFinish: row === FINISH_ROW && col === FINISH_COL,
                     distance: row === START_ROW && col === START_COL ? 0 : Infinity,
@@ -50,9 +51,12 @@ export default class Board extends Component {
         // visualize searching route
         for(let node of visitedNodes) {
             setTimeout(() => {
+                console.log(node.id);
+                //document.getElementById(node.id).style.backgroundColor = '#7C7B3A';
+
                 nodes[node.row][node.col].isVisited = node.isVisited;
                 this.setState({ nodes });
-            }, 5000);
+            }, 100);
             
         }
 
@@ -80,7 +84,7 @@ export default class Board extends Component {
                             return <div key={rowIdx}>
                                 {
                                     row.map((col, colIdx) => {
-                                        return <Node key={colIdx} isStart={col.isStart} isFinish={col.isFinish} isVisited={col.isVisited} isRoute={col.isRoute}></Node>
+                                            return <Node id={col.id} key={colIdx} isStart={col.isStart} isFinish={col.isFinish} isVisited={col.isVisited} isRoute={col.isRoute}></Node>
                                     })
                                 }
                             </div>

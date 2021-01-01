@@ -7,8 +7,7 @@ export const dijkstra = (grid, startNode, finishNode) => {
     const unvisitedNodes = getUnvisitedNodes(grid);
 
     while(!!unvisitedNodes.length) {
-
-        unvisitedNodes.sort((a,b) => a.distance - b.distance);
+       
         //get current node
         let currentNode = unvisitedNodes.shift();
         currentNode.isVisited = true;
@@ -28,6 +27,8 @@ export const dijkstra = (grid, startNode, finishNode) => {
 
         //save visited node to array
         visitedNodes.push(currentNode);
+
+        unvisitedNodes.sort((a,b) => a.distance - b.distance);
 
         if (currentNode === finishNode) {
             return visitedNodes;
