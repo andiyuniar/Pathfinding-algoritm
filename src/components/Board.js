@@ -175,7 +175,9 @@ const Board = () => {
 
     return(
         <React.Fragment>
+            <h2>Path Finder</h2>
             <button onClick={visualizeAlgoritm}>Find Sortest Route</button>
+            <p>Select below to change start point, finish point or create a wall</p>
             <p>
                 <input type="radio" name="draw_selection" value="START" onChange={() => startChangeHandler()} 
                     checked={drawSelection === 'START'}></input>START node
@@ -189,7 +191,7 @@ const Board = () => {
                 {
                     nodes.map((rows, rowIdx) => {
                         return(
-                            <div key={rowIdx} >
+                            <div key={rowIdx} className='rowdiv' >
                                 {
                                     rows.map((col, colIdx) => {
                                         return (
